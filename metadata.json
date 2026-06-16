@@ -1,0 +1,6 @@
+{
+  "name": "رادار",
+  "description": "رادار سخت‌افزار: سیستم مقایسه فنی چندبعدی و دستیار هوشمند تکنولوژی.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
