@@ -1,8 +1,40 @@
-// Top-level build file where you can add configuration options common to all sub-projects/modules.
-plugins {
-  alias(libs.plugins.android.application) apply false
-  alias(libs.plugins.kotlin.compose) apply false
-  alias(libs.plugins.google.devtools.ksp) apply false
-  alias(libs.plugins.roborazzi) apply false
-  alias(libs.plugins.secrets) apply false
-}
+name: Build APK
+
+on:
+  workflow_dispatch:        # امکان اجرای دستی از تب Actions
+  push:
+    branches: [ main ]      # با هر commit روی شاخه‌ی main خودکار اجرا می‌شود
+
+permissions:
+  contents: read
+
+jobs:
+  build-apk:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up JDK 17
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+
+      - name: Set up Android SDK
+        uses: android-actions/setup-android@v3
+
+      - name: Set up Gradle 9.1.0
+        uses: gradle/actions/setup-gradle@v4
+        with:
+          gradle-version: '9.1.0'
+
+      - name: Build debug APK
+        run: gradle assembleDebug --no-daemon --stacktrace
+
+      - name: Upload APK artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: radar-debug-apk
+          path: app/build/outputs/apk/debug/*.apk
+          if-no-files-found: error
